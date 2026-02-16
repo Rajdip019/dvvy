@@ -56,6 +56,19 @@ export default function RootLayout({
             <main className="container mx-auto max-w-4xl px-4 py-4 sm:py-8">
               {children}
             </main>
+            <footer className="border-t border-border/40 py-4">
+              <p className="text-center text-xs text-muted-foreground">
+                Created with love by{" "}
+                <a
+                  href="https://github.com/Rajdip019"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-foreground hover:text-primary transition-colors"
+                >
+                  Rajdeep
+                </a>
+              </p>
+            </footer>
           </div>
         </AppProvider>
       </body>

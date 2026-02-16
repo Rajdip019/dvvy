@@ -236,7 +236,13 @@ export function exportGroupPDF(group: Group) {
     doc.text(
       `dvvy export  —  Page ${i} of ${pageCount}`,
       PAGE_WIDTH / 2,
-      290,
+      287,
+      { align: "center" }
+    );
+    doc.text(
+      "Created with love by Rajdeep  —  github.com/Rajdip019",
+      PAGE_WIDTH / 2,
+      292,
       { align: "center" }
     );
   }
