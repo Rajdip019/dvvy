@@ -191,9 +191,9 @@ export default function AddExpenseForm({
       <DialogHeader>
         <DialogTitle>{isEdit ? "Edit Expense" : "Add Expense"}</DialogTitle>
       </DialogHeader>
-      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
-        <div className="grid gap-3 sm:gap-4 sm:grid-cols-2">
-          <div className="space-y-1.5">
+      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 overflow-hidden">
+        <div className="grid gap-3 sm:gap-4 sm:grid-cols-2 min-w-0">
+          <div className="space-y-1.5 min-w-0">
             <Label htmlFor="description">Description</Label>
             <Input
               id="description"
@@ -203,7 +203,7 @@ export default function AddExpenseForm({
               className="h-10 sm:h-9"
             />
           </div>
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 min-w-0">
             <Label htmlFor="amount">Amount (₹)</Label>
             <Input
               id="amount"
@@ -218,24 +218,24 @@ export default function AddExpenseForm({
           </div>
         </div>
 
-        <div className="grid gap-3 sm:gap-4 sm:grid-cols-2">
-          <div className="space-y-1.5">
+        <div className="grid gap-3 sm:gap-4 sm:grid-cols-2 min-w-0">
+          <div className="space-y-1.5 min-w-0">
             <Label htmlFor="date">Date</Label>
             <Input
               id="date"
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="h-10 sm:h-9"
+              className="h-10 sm:h-9 min-w-0"
             />
           </div>
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 min-w-0">
             <Label htmlFor="paidBy">Paid By</Label>
             <select
               id="paidBy"
               value={paidBy}
               onChange={(e) => setPaidBy(e.target.value)}
-              className="flex h-10 sm:h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              className="flex h-10 sm:h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
             >
               {members.map((m) => (
                 <option key={m.id} value={m.id}>

@@ -158,14 +158,11 @@ export default function GroupStats({ members, expenses }: Props) {
                     {memberMap.get(ms.memberId)}
                   </span>
                 </div>
-                <div className="text-right text-xs sm:text-sm shrink-0">
-                  <div>
-                    Paid:{" "}
-                    <span className="font-semibold">
-                      ₹{ms.totalPaid.toFixed(2)}
-                    </span>
+                <div className="text-right shrink-0">
+                  <div className="text-[10px] sm:text-xs text-muted-foreground">
+                    Paid: ₹{ms.totalPaid.toFixed(2)}
                   </div>
-                  <div className="text-muted-foreground">
+                  <div className="text-sm sm:text-base font-semibold">
                     Share: ₹{ms.totalShare.toFixed(2)}
                   </div>
                 </div>
