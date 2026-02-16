@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-SplitEase — a client-side Next.js 16 app for splitting group expenses. No backend or persistence; all state lives in React Context (useReducer) and is lost on refresh. Dark mode is enabled by default.
+dvvy — a client-side Next.js 16 app for splitting group expenses. State is persisted in localStorage. Dark mode is enabled by default.
 
 ## Commands
 

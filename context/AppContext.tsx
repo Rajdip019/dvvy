@@ -14,7 +14,7 @@ interface AppState {
   groups: Group[];
 }
 
-const STORAGE_KEY = "splitease-data";
+const STORAGE_KEY = "dvvy-data";
 
 type Action =
   | { type: "HYDRATE"; payload: AppState }
