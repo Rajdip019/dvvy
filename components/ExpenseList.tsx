@@ -54,18 +54,18 @@ export default function ExpenseList({ groupId, expenses, members }: Props) {
       <div className="space-y-3">
         {sorted.map((expense, idx) => (
           <div key={expense.id}>
-            <Card className="p-4">
-              <div className="flex items-start justify-between gap-4">
+            <Card className="p-3 sm:p-4">
+              <div className="flex items-start justify-between gap-3 sm:gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <h4 className="font-medium truncate">
+                    <h4 className="text-sm sm:text-base font-medium truncate">
                       {expense.description}
                     </h4>
-                    <Badge variant="outline" className="text-xs shrink-0">
+                    <Badge variant="outline" className="text-[10px] sm:text-xs shrink-0">
                       {expense.splitType}
                     </Badge>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-muted-foreground">
                     <span>
                       Paid by{" "}
                       <span className="text-foreground font-medium">
@@ -75,26 +75,26 @@ export default function ExpenseList({ groupId, expenses, members }: Props) {
                     <span>&middot;</span>
                     <span>{new Date(expense.date).toLocaleDateString()}</span>
                   </div>
-                  <div className="flex flex-wrap gap-1.5 mt-2">
+                  <div className="flex flex-wrap gap-1 sm:gap-1.5 mt-2">
                     {expense.splits.map((s) => (
                       <span
                         key={s.memberId}
-                        className="inline-flex items-center rounded-md bg-muted px-2 py-0.5 text-xs"
+                        className="inline-flex items-center rounded-md bg-muted px-1.5 sm:px-2 py-0.5 text-[10px] sm:text-xs"
                       >
                         {memberMap.get(s.memberId) ?? "?"}: ₹{s.amount.toFixed(2)}
                       </span>
                     ))}
                   </div>
                 </div>
-                <div className="flex flex-col items-end gap-2">
-                  <span className="text-lg font-semibold">
+                <div className="flex flex-col items-end gap-1.5 sm:gap-2 shrink-0">
+                  <span className="text-base sm:text-lg font-semibold">
                     ₹{expense.amount.toFixed(2)}
                   </span>
-                  <div className="flex gap-1">
+                  <div className="flex gap-0.5 sm:gap-1">
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-7 text-xs text-muted-foreground hover:text-foreground"
+                      className="h-7 px-2 sm:px-3 text-xs text-muted-foreground hover:text-foreground"
                       onClick={() => setEditingExpense(expense)}
                     >
                       Edit
@@ -102,7 +102,7 @@ export default function ExpenseList({ groupId, expenses, members }: Props) {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-7 text-xs text-muted-foreground hover:text-destructive"
+                      className="h-7 px-2 sm:px-3 text-xs text-muted-foreground hover:text-destructive"
                       onClick={() =>
                         dispatch({
                           type: "DELETE_EXPENSE",

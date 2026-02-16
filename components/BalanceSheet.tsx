@@ -49,18 +49,18 @@ export default function BalanceSheet({ members, expenses }: Props) {
         </h3>
         <div className="grid gap-2 sm:grid-cols-2">
           {balances.map((b) => (
-            <Card key={b.memberId} className="p-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
+            <Card key={b.memberId} className="p-2.5 sm:p-3">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="inline-flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-primary/10 text-[10px] sm:text-xs font-medium text-primary shrink-0">
                     {(memberMap.get(b.memberId) ?? "?").charAt(0).toUpperCase()}
                   </span>
-                  <span className="text-sm font-medium">
+                  <span className="text-xs sm:text-sm font-medium truncate">
                     {memberMap.get(b.memberId)}
                   </span>
                 </div>
                 <span
-                  className={`text-sm font-semibold ${
+                  className={`text-xs sm:text-sm font-semibold shrink-0 ${
                     b.amount > 0.01
                       ? "text-green-500"
                       : b.amount < -0.01
@@ -89,10 +89,10 @@ export default function BalanceSheet({ members, expenses }: Props) {
             </h3>
             <div className="space-y-2">
               {settlements.map((s, i) => (
-                <Card key={i} className="p-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-sm">
-                      <span className="font-medium text-red-400">
+                <Card key={i} className="p-2.5 sm:p-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm min-w-0">
+                      <span className="font-medium text-red-400 truncate">
                         {memberMap.get(s.from)}
                       </span>
                       <svg
@@ -108,11 +108,11 @@ export default function BalanceSheet({ members, expenses }: Props) {
                         <path d="M5 12h14" />
                         <path d="m12 5 7 7-7 7" />
                       </svg>
-                      <span className="font-medium text-green-500">
+                      <span className="font-medium text-green-500 truncate">
                         {memberMap.get(s.to)}
                       </span>
                     </div>
-                    <span className="font-semibold">
+                    <span className="text-xs sm:text-sm font-semibold shrink-0">
                       ₹{s.amount.toFixed(2)}
                     </span>
                   </div>

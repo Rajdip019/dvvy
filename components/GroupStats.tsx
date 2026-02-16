@@ -106,30 +106,30 @@ export default function GroupStats({ members, expenses }: Props) {
         <h3 className="text-sm font-medium text-muted-foreground mb-3">
           Summary
         </h3>
-        <div className="grid gap-3 grid-cols-2">
-          <Card className="p-3">
-            <div className="text-xs text-muted-foreground">Total Expenses</div>
-            <div className="text-lg font-semibold">
+        <div className="grid gap-2 sm:gap-3 grid-cols-2">
+          <Card className="p-2.5 sm:p-3">
+            <div className="text-[10px] sm:text-xs text-muted-foreground">Total Expenses</div>
+            <div className="text-base sm:text-lg font-semibold">
               ₹{groupStats.totalExpenses.toFixed(2)}
             </div>
           </Card>
-          <Card className="p-3">
-            <div className="text-xs text-muted-foreground">No. of Expenses</div>
-            <div className="text-lg font-semibold">{groupStats.expenseCount}</div>
+          <Card className="p-2.5 sm:p-3">
+            <div className="text-[10px] sm:text-xs text-muted-foreground">No. of Expenses</div>
+            <div className="text-base sm:text-lg font-semibold">{groupStats.expenseCount}</div>
           </Card>
-          <Card className="p-3">
-            <div className="text-xs text-muted-foreground">Average Expense</div>
-            <div className="text-lg font-semibold">
+          <Card className="p-2.5 sm:p-3">
+            <div className="text-[10px] sm:text-xs text-muted-foreground">Average Expense</div>
+            <div className="text-base sm:text-lg font-semibold">
               ₹{groupStats.averageExpense.toFixed(2)}
             </div>
           </Card>
-          <Card className="p-3">
-            <div className="text-xs text-muted-foreground">Largest Expense</div>
-            <div className="text-lg font-semibold">
+          <Card className="p-2.5 sm:p-3">
+            <div className="text-[10px] sm:text-xs text-muted-foreground">Largest Expense</div>
+            <div className="text-base sm:text-lg font-semibold">
               ₹{groupStats.largestExpense?.amount.toFixed(2) ?? "0.00"}
             </div>
             {groupStats.largestExpense && (
-              <div className="text-xs text-muted-foreground truncate">
+              <div className="text-[10px] sm:text-xs text-muted-foreground truncate">
                 {groupStats.largestExpense.description}
               </div>
             )}
@@ -146,19 +146,19 @@ export default function GroupStats({ members, expenses }: Props) {
         </h3>
         <div className="space-y-2">
           {memberStats.map((ms) => (
-            <Card key={ms.memberId} className="p-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
+            <Card key={ms.memberId} className="p-2.5 sm:p-3">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="inline-flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-primary/10 text-[10px] sm:text-xs font-medium text-primary shrink-0">
                     {(memberMap.get(ms.memberId) ?? "?")
                       .charAt(0)
                       .toUpperCase()}
                   </span>
-                  <span className="text-sm font-medium">
+                  <span className="text-xs sm:text-sm font-medium truncate">
                     {memberMap.get(ms.memberId)}
                   </span>
                 </div>
-                <div className="text-right text-sm">
+                <div className="text-right text-xs sm:text-sm shrink-0">
                   <div>
                     Paid:{" "}
                     <span className="font-semibold">
@@ -183,10 +183,10 @@ export default function GroupStats({ members, expenses }: Props) {
           Who Paid What
         </h3>
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-4 sm:pt-6 px-2 sm:px-6">
             <ChartContainer
               config={pieConfig}
-              className="mx-auto aspect-square max-h-[250px]"
+              className="mx-auto aspect-square max-h-[200px] sm:max-h-[250px]"
             >
               <PieChart>
                 <ChartTooltip
@@ -200,7 +200,7 @@ export default function GroupStats({ members, expenses }: Props) {
                   data={pieData}
                   dataKey="value"
                   nameKey="name"
-                  innerRadius={50}
+                  innerRadius={40}
                   strokeWidth={2}
                 />
                 <ChartLegend content={<ChartLegendContent nameKey="name" />} />
@@ -218,8 +218,8 @@ export default function GroupStats({ members, expenses }: Props) {
           Paid vs. Share
         </h3>
         <Card>
-          <CardContent className="pt-6">
-            <ChartContainer config={barConfig} className="max-h-[250px] w-full">
+          <CardContent className="pt-4 sm:pt-6 px-2 sm:px-6">
+            <ChartContainer config={barConfig} className="max-h-[200px] sm:max-h-[250px] w-full">
               <BarChart data={barData} accessibilityLayer>
                 <CartesianGrid vertical={false} />
                 <XAxis
@@ -227,11 +227,14 @@ export default function GroupStats({ members, expenses }: Props) {
                   tickLine={false}
                   axisLine={false}
                   tickMargin={8}
+                  fontSize={12}
                 />
                 <YAxis
                   tickLine={false}
                   axisLine={false}
                   tickFormatter={(v) => `₹${v}`}
+                  width={40}
+                  fontSize={11}
                 />
                 <ChartTooltip
                   content={
@@ -266,10 +269,10 @@ export default function GroupStats({ members, expenses }: Props) {
               Spending Over Time
             </h3>
             <Card>
-              <CardContent className="pt-6">
+              <CardContent className="pt-4 sm:pt-6 px-2 sm:px-6">
                 <ChartContainer
                   config={lineConfig}
-                  className="max-h-[200px] w-full"
+                  className="max-h-[180px] sm:max-h-[200px] w-full"
                 >
                   <LineChart data={timeline} accessibilityLayer>
                     <CartesianGrid vertical={false} />
@@ -278,6 +281,7 @@ export default function GroupStats({ members, expenses }: Props) {
                       tickLine={false}
                       axisLine={false}
                       tickMargin={8}
+                      fontSize={11}
                       tickFormatter={(d) =>
                         new Date(d).toLocaleDateString(undefined, {
                           month: "short",
@@ -289,6 +293,8 @@ export default function GroupStats({ members, expenses }: Props) {
                       tickLine={false}
                       axisLine={false}
                       tickFormatter={(v) => `₹${v}`}
+                      width={40}
+                      fontSize={11}
                     />
                     <ChartTooltip
                       content={
@@ -304,7 +310,7 @@ export default function GroupStats({ members, expenses }: Props) {
                       dataKey="total"
                       stroke="var(--color-total)"
                       strokeWidth={2}
-                      dot={{ r: 4 }}
+                      dot={{ r: 3 }}
                     />
                   </LineChart>
                 </ChartContainer>

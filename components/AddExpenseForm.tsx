@@ -187,22 +187,23 @@ export default function AddExpenseForm({
     (splitType !== "unequal" || Math.abs(unequalDiff) < 0.01);
 
   const dialogContent = (
-    <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
+    <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto p-4 sm:p-6">
       <DialogHeader>
         <DialogTitle>{isEdit ? "Edit Expense" : "Add Expense"}</DialogTitle>
       </DialogHeader>
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
+      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+        <div className="grid gap-3 sm:gap-4 sm:grid-cols-2">
+          <div className="space-y-1.5">
             <Label htmlFor="description">Description</Label>
             <Input
               id="description"
               placeholder="e.g. Dinner"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              className="h-10 sm:h-9"
             />
           </div>
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <Label htmlFor="amount">Amount (₹)</Label>
             <Input
               id="amount"
@@ -212,27 +213,29 @@ export default function AddExpenseForm({
               placeholder="0.00"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
+              className="h-10 sm:h-9"
             />
           </div>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
+        <div className="grid gap-3 sm:gap-4 sm:grid-cols-2">
+          <div className="space-y-1.5">
             <Label htmlFor="date">Date</Label>
             <Input
               id="date"
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
+              className="h-10 sm:h-9"
             />
           </div>
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <Label htmlFor="paidBy">Paid By</Label>
             <select
               id="paidBy"
               value={paidBy}
               onChange={(e) => setPaidBy(e.target.value)}
-              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              className="flex h-10 sm:h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
             >
               {members.map((m) => (
                 <option key={m.id} value={m.id}>
@@ -251,7 +254,7 @@ export default function AddExpenseForm({
                 key={type}
                 type="button"
                 onClick={() => setSplitType(type)}
-                className={`flex-1 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                className={`flex-1 rounded-md px-2 sm:px-3 py-2 sm:py-1.5 text-xs sm:text-sm font-medium transition-colors ${
                   splitType === type
                     ? "bg-background text-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
@@ -260,7 +263,7 @@ export default function AddExpenseForm({
                 {type === "equal"
                   ? "Equal"
                   : type === "select"
-                  ? "Select Members"
+                  ? "Select"
                   : "Unequal"}
               </button>
             ))}
@@ -351,7 +354,7 @@ export default function AddExpenseForm({
           </div>
         )}
 
-        <Button type="submit" className="w-full" disabled={!canSubmit}>
+        <Button type="submit" className="w-full h-11 sm:h-10" disabled={!canSubmit}>
           {isEdit ? "Save Changes" : "Add Expense"}
         </Button>
       </form>
