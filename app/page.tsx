@@ -1,66 +1,96 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import { useApp } from "@/context/AppContext";
+import CreateGroupForm from "@/components/CreateGroupForm";
+import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 export default function Home() {
+  const { state } = useApp();
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="space-y-6 sm:space-y-8">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Your Groups</h1>
+          <p className="text-sm sm:text-base text-muted-foreground mt-1">
+            Create a group and start splitting expenses.
           </p>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <CreateGroupForm />
+      </div>
+
+      {state.groups.length === 0 ? (
+        <Card className="border-dashed">
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-12 w-12 text-muted-foreground/50 mb-4"
+            >
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+            <h3 className="text-lg font-semibold text-muted-foreground">
+              No groups yet
+            </h3>
+            <p className="text-sm text-muted-foreground/70 mt-1">
+              Create your first group to get started.
+            </p>
+          </div>
+        </Card>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2">
+          {state.groups.map((group) => {
+            const totalExpenses = group.expenses.reduce(
+              (sum, e) => sum + e.amount,
+              0
+            );
+            return (
+              <Link key={group.id} href={`/group/${group.id}`}>
+                <Card className="transition-colors hover:bg-accent/50 cursor-pointer">
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <CardTitle className="text-lg">{group.name}</CardTitle>
+                        <CardDescription className="mt-1">
+                          {group.members.length} members &middot;{" "}
+                          {group.expenses.length} expense
+                          {group.expenses.length !== 1 ? "s" : ""}
+                        </CardDescription>
+                      </div>
+                      {totalExpenses > 0 && (
+                        <Badge variant="secondary" className="text-xs">
+                          ₹{totalExpenses.toFixed(2)}
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 mt-3">
+                      {group.members.map((m) => (
+                        <span
+                          key={m.id}
+                          className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-[10px] font-medium text-primary"
+                          title={m.name}
+                        >
+                          {m.name.charAt(0).toUpperCase()}
+                        </span>
+                      ))}
+                    </div>
+                  </CardHeader>
+                </Card>
+              </Link>
+            );
+          })}
         </div>
-      </main>
+      )}
     </div>
   );
 }
