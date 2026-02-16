@@ -82,3 +82,48 @@ export function simplifyDebts(
 
   return settlements;
 }
+
+export interface PairwiseTab {
+  memberId: string;
+  otherMemberId: string;
+  amount: number; // positive = owes other, negative = owed by other
+}
+
+/**
+ * Computes pairwise net debts between every pair of members.
+ * For each member, shows what they owe (+) or are owed (-) by every other member.
+ */
+export function computePairwiseTabs(
+  members: Member[],
+  expenses: Expense[]
+): PairwiseTab[] {
+  // Track raw debts: rawDebts[fromId][toId] = total amount from owes to
+  const rawDebts = new Map<string, Map<string, number>>();
+  for (const m of members) {
+    rawDebts.set(m.id, new Map());
+  }
+
+  for (const expense of expenses) {
+    for (const split of expense.splits) {
+      if (split.memberId !== expense.paidBy) {
+        const fromMap = rawDebts.get(split.memberId)!;
+        const current = fromMap.get(expense.paidBy) ?? 0;
+        fromMap.set(expense.paidBy, current + split.amount);
+      }
+    }
+  }
+
+  // Net out and produce tabs for every ordered pair
+  const tabs: PairwiseTab[] = [];
+  for (const m1 of members) {
+    for (const m2 of members) {
+      if (m1.id === m2.id) continue;
+      const m1OwesM2 = rawDebts.get(m1.id)?.get(m2.id) ?? 0;
+      const m2OwesM1 = rawDebts.get(m2.id)?.get(m1.id) ?? 0;
+      const net = Math.round((m1OwesM2 - m2OwesM1) * 100) / 100;
+      tabs.push({ memberId: m1.id, otherMemberId: m2.id, amount: net });
+    }
+  }
+
+  return tabs;
+}

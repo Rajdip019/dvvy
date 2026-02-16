@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
   calculateBalances,
-  simplifyDebts,
+  computePairwiseTabs,
 } from "@/utils/balance";
 import type { Expense, Member } from "@/types";
 
@@ -15,7 +15,7 @@ interface Props {
 
 export default function BalanceSheet({ members, expenses }: Props) {
   const balances = calculateBalances(members, expenses);
-  const settlements = simplifyDebts(members, expenses);
+  const pairwiseTabs = computePairwiseTabs(members, expenses);
   const memberMap = new Map(members.map((m) => [m.id, m.name]));
 
   if (expenses.length === 0) {
@@ -80,48 +80,67 @@ export default function BalanceSheet({ members, expenses }: Props) {
         </div>
       </div>
 
-      {settlements.length > 0 && (
+      {pairwiseTabs.length > 0 && (
         <>
           <Separator />
           <div>
             <h3 className="text-sm font-medium text-muted-foreground mb-3">
-              Simplified Settlements
+              Who Pays Whom
             </h3>
-            <div className="space-y-2">
-              {settlements.map((s, i) => (
-                <Card key={i} className="p-2.5 sm:p-3">
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm min-w-0">
-                      <span className="font-medium text-red-400 truncate">
-                        {memberMap.get(s.from)}
+            <div className="space-y-4">
+              {members.map((m) => {
+                const tabs = pairwiseTabs.filter(
+                  (t) => t.memberId === m.id
+                );
+                return (
+                  <Card key={m.id} className="p-2.5 sm:p-3">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="inline-flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-primary/10 text-[10px] sm:text-xs font-medium text-primary shrink-0">
+                        {m.name.charAt(0).toUpperCase()}
                       </span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="h-4 w-4 text-muted-foreground"
-                      >
-                        <path d="M5 12h14" />
-                        <path d="m12 5 7 7-7 7" />
-                      </svg>
-                      <span className="font-medium text-green-500 truncate">
-                        {memberMap.get(s.to)}
+                      <span className="text-xs sm:text-sm font-semibold">
+                        {m.name}
                       </span>
                     </div>
-                    <span className="text-xs sm:text-sm font-semibold shrink-0">
-                      ₹{s.amount.toFixed(2)}
-                    </span>
-                  </div>
-                </Card>
-              ))}
+                    <div className="space-y-1 ml-8 sm:ml-9">
+                      {tabs.map((t) => (
+                        <div
+                          key={t.otherMemberId}
+                          className="flex items-center justify-between text-xs sm:text-sm"
+                        >
+                          <span className="text-muted-foreground truncate">
+                            {t.amount > 0.01
+                              ? `owes ${memberMap.get(t.otherMemberId)}`
+                              : t.amount < -0.01
+                              ? `gets back from ${memberMap.get(t.otherMemberId)}`
+                              : `settled with ${memberMap.get(t.otherMemberId)}`}
+                          </span>
+                          <span
+                            className={`font-medium shrink-0 ml-2 ${
+                              t.amount > 0.01
+                                ? "text-red-400"
+                                : t.amount < -0.01
+                                ? "text-green-500"
+                                : "text-muted-foreground"
+                            }`}
+                          >
+                            {t.amount > 0.01
+                              ? `₹${t.amount.toFixed(2)}`
+                              : t.amount < -0.01
+                              ? `₹${Math.abs(t.amount).toFixed(2)}`
+                              : "₹0.00"}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </Card>
+                );
+              })}
             </div>
           </div>
         </>
       )}
+
     </div>
   );
 }
