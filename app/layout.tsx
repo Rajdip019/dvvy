@@ -30,19 +30,24 @@ export default function RootLayout({
           <div className="min-h-screen bg-background">
             <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
               <div className="container mx-auto flex h-14 max-w-4xl items-center px-4">
-                <a href="/" className="flex items-center gap-2 font-semibold tracking-tight">
+                <a href="/" className="flex items-center gap-2.5 font-bold tracking-tight text-base">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="h-5 w-5 text-primary"
+                    viewBox="0 0 512 512"
+                    className="h-7 w-7"
                   >
-                    <line x1="12" x2="12" y1="2" y2="22" />
-                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                    <defs>
+                      <linearGradient id="logo-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style={{ stopColor: "#6366f1" }} />
+                        <stop offset="100%" style={{ stopColor: "#8b5cf6" }} />
+                      </linearGradient>
+                    </defs>
+                    <rect width="512" height="512" rx="96" fill="url(#logo-bg)" />
+                    <g fill="none" stroke="#fff" strokeWidth="32" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="256" y1="112" x2="256" y2="400" />
+                      <line x1="144" y1="192" x2="368" y2="192" />
+                      <line x1="144" y1="320" x2="368" y2="320" />
+                    </g>
                   </svg>
                   dvvy
                 </a>

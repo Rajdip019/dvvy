@@ -42,11 +42,52 @@ export function exportGroupPDF(group: Group) {
     }
   }
 
-  // ── Header ──
-  doc.setFontSize(20);
+  // ── Branded Header ──
+  // Draw logo icon (rounded rect with gradient-like fill)
+  const logoSize = 12;
+  const logoX = MARGIN;
+  const logoY = y - 8;
+  doc.setFillColor(99, 102, 241); // indigo-500
+  doc.roundedRect(logoX, logoY, logoSize, logoSize, 2, 2, "F");
+  // Draw the split lines on the logo
+  doc.setDrawColor(255, 255, 255);
+  doc.setLineWidth(0.8);
+  // Vertical line
+  doc.line(logoX + logoSize / 2, logoY + 2.5, logoX + logoSize / 2, logoY + logoSize - 2.5);
+  // Top horizontal
+  doc.line(logoX + 3, logoY + 4.5, logoX + logoSize - 3, logoY + 4.5);
+  // Bottom horizontal
+  doc.line(logoX + 3, logoY + logoSize - 4.5, logoX + logoSize - 3, logoY + logoSize - 4.5);
+  doc.setDrawColor(0);
+  doc.setLineWidth(0.2);
+
+  // Brand name
+  doc.setFontSize(18);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(99, 102, 241);
+  doc.text("dvvy", MARGIN + logoSize + 3, y);
+  doc.setTextColor(0);
+
+  // Tagline
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(150);
+  doc.text("Group Expense Calculator", MARGIN + logoSize + 3, y + 4.5);
+  doc.setTextColor(0);
+  y += 14;
+
+  // Divider line
+  doc.setDrawColor(200);
+  doc.setLineWidth(0.3);
+  doc.line(MARGIN, y, PAGE_WIDTH - MARGIN, y);
+  doc.setDrawColor(0);
+  y += 8;
+
+  // Group name
+  doc.setFontSize(16);
   doc.setFont("helvetica", "bold");
   doc.text(group.name, MARGIN, y);
-  y += 8;
+  y += 7;
 
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
@@ -152,34 +193,39 @@ export function exportGroupPDF(group: Group) {
   });
   y = getFinalY(doc, y + 30) + 10;
 
-  // ── Who Pays Whom ──
+  // ── Who Pays Whom (grouped by member) ──
   checkPageBreak(30);
   addSectionTitle("Who Pays Whom");
 
-  const pairwiseRows: string[][] = [];
   for (const m of group.members) {
     const tabs = pairwiseTabs.filter((t) => t.memberId === m.id);
-    for (const t of tabs) {
+    const rows = tabs.map((t) => {
       if (Math.abs(t.amount) < 0.01) {
-        pairwiseRows.push([m.name, getName(t.otherMemberId), "Settled", "Rs.0.00"]);
+        return [getName(t.otherMemberId), "Settled", "Rs.0.00"];
       } else if (t.amount > 0) {
-        pairwiseRows.push([m.name, getName(t.otherMemberId), "Owes", `Rs.${t.amount.toFixed(2)}`]);
+        return [getName(t.otherMemberId), "Owes", `Rs.${t.amount.toFixed(2)}`];
       } else {
-        pairwiseRows.push([m.name, getName(t.otherMemberId), "Gets back", `Rs.${Math.abs(t.amount).toFixed(2)}`]);
+        return [getName(t.otherMemberId), "Gets back", `Rs.${Math.abs(t.amount).toFixed(2)}`];
       }
-    }
-  }
+    });
 
-  autoTable(doc, {
-    startY: y,
-    margin: { left: MARGIN },
-    head: [["From", "To", "Status", "Amount"]],
-    body: pairwiseRows,
-    theme: "grid",
-    headStyles: { fillColor: [40, 40, 40] },
-    styles: { fontSize: 9 },
-  });
-  y = getFinalY(doc, y + 30) + 10;
+    checkPageBreak(20);
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "bold");
+    doc.text(m.name, MARGIN, y);
+    y += 5;
+
+    autoTable(doc, {
+      startY: y,
+      margin: { left: MARGIN },
+      head: [["With", "Status", "Amount"]],
+      body: rows,
+      theme: "grid",
+      headStyles: { fillColor: [60, 60, 60] },
+      styles: { fontSize: 9 },
+    });
+    y = getFinalY(doc, y + 20) + 6;
+  }
 
   // ── Footer ──
   const pageCount = doc.getNumberOfPages();
