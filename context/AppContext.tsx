@@ -4,6 +4,7 @@ import {
   createContext,
   useContext,
   useReducer,
+  useEffect,
   type ReactNode,
   type Dispatch,
 } from "react";
@@ -13,7 +14,10 @@ interface AppState {
   groups: Group[];
 }
 
+const STORAGE_KEY = "splitease-data";
+
 type Action =
+  | { type: "HYDRATE"; payload: AppState }
   | { type: "CREATE_GROUP"; payload: { name: string; members: Member[] } }
   | { type: "DELETE_GROUP"; payload: { groupId: string } }
   | {
@@ -39,6 +43,8 @@ function generateId(): string {
 
 function appReducer(state: AppState, action: Action): AppState {
   switch (action.type) {
+    case "HYDRATE":
+      return action.payload;
     case "CREATE_GROUP": {
       const newGroup: Group = {
         id: generateId(),
@@ -114,6 +120,24 @@ const AppContext = createContext<{
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(appReducer, { groups: [] });
+
+  // Hydrate from localStorage on mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        dispatch({ type: "HYDRATE", payload: JSON.parse(stored) });
+      }
+    } catch {}
+  }, []);
+
+  // Persist to localStorage on every state change
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch {}
+  }, [state]);
+
   return (
     <AppContext.Provider value={{ state, dispatch }}>
       {children}
